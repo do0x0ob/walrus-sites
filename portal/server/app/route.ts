@@ -54,8 +54,7 @@ export async function GET(req: NextRequest) {
     const requestDomain = getDomain(url, Number(portalDomainNameLength));
 
     logger.info({ message: "url", url: url });
-    logger.info(parsedUrl?.path);
-    logger.info(parsedUrl?.subdomain);
+    logger.info({ message: "parsedUrl", parsedUrl: JSON.stringify(parsedUrl)});
     logger.info({ message: "Portal Domain", portalDomain: portalDomain });
     logger.info({ message: "Request Domain", requestDomain: requestDomain });
     if (parsedUrl) {

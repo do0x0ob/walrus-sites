@@ -3,6 +3,7 @@
 
 import { parseDomain, ParseResultType } from "parse-domain";
 import { UrlExtract, DomainDetails } from "./types/index";
+import logger from "./logger";
 
 /**
  * Returns the domain (e.g. "example.com") of the given URL.
@@ -30,7 +31,9 @@ export function getSubdomainAndPath(url: URL, portalNameLength?: Number): Domain
     { subdomain: "subname", path: "/index.html"}}
 */
 function splitUrl(url: URL, portalNameLength?: Number): UrlExtract {
+    logger.info({ message: "url in splitUrl", url: url });
     const parsed = parseDomain(url.hostname);
+    logger.info({ message: "parsed in splitUrl", parsed: JSON.stringify(parsed) });
     let domain: string | null = null;
     let subdomain: string | null = null;
     if (parsed.type === ParseResultType.Listed) {
