@@ -14,6 +14,7 @@ import { standardUrlFetcher, premiumUrlFetcher } from "src/url_fetcher_factory";
 import { NextRequest } from "next/server";
 import { sendToWebAnalytics } from "src/web_analytics";
 import { sendToAmplitude } from "src/amplitude";
+import logger from "@lib/logger";
 
 if (config.enableSentry) {
     // Only integrate Sentry on production.
@@ -52,6 +53,9 @@ export async function GET(req: NextRequest) {
     const portalDomain = getDomain(url, Number(portalDomainNameLength));
     const requestDomain = getDomain(url, Number(portalDomainNameLength));
 
+    logger.info({ message: "Parsed URL", parsedUrl: parsedUrl });
+    logger.info({ message: "Portal Domain", portalDomain: portalDomain });
+    logger.info({ message: "Request Domain", requestDomain: requestDomain });
     if (parsedUrl) {
         if (blocklistChecker && await blocklistChecker.isBlocked(parsedUrl.subdomain)) {
             return siteNotFound();
