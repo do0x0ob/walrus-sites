@@ -37,12 +37,19 @@ function splitUrl(url: URL, portalNameLength?: Number): UrlExtract {
     let domain: string | null = null;
     let subdomain: string | null = null;
     if (parsed.type === ParseResultType.Listed) {
+        logger.info({ message: "portalNameLength in splitUrl", portalNameLength: portalNameLength });
         if (portalNameLength) {
+            logger.info({ message: "portalNameLength is not null in splitUrl", portalNameLength: portalNameLength });
             domain = parsed.hostname.slice(-portalNameLength)
+            logger.info({ message: "domain in splitUrl with portalNameLength", domain: domain });
             subdomain = parsed.hostname.slice(0, -portalNameLength - 1)
+            logger.info({ message: "subdomain in splitUrl with portalNameLength", subdomain: subdomain });
         } else {
+            logger.info({ message: "portalNameLength is null in splitUrl", portalNameLength: portalNameLength });
             domain = parsed.domain + "." + parsed.topLevelDomains.join(".")
+            logger.info({ message: "domain in splitUrl without portalNameLength", domain: domain });
             subdomain = parsed.subDomains.join(".")
+            logger.info({ message: "subdomain in splitUrl without portalNameLength", subdomain: subdomain });
         }
     } else if (parsed.type === ParseResultType.Reserved) {
         domain = parsed.labels[parsed.labels.length - 1];
@@ -54,6 +61,8 @@ function splitUrl(url: URL, portalNameLength?: Number): UrlExtract {
         }
     }
 
+    logger.info({ message: "domain in splitUrl result", domain: domain });
+    logger.info({ message: "subdomain in splitUrl result", subdomain: subdomain });
     return {
         domain,
         details: {

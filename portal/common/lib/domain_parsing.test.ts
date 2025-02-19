@@ -57,7 +57,8 @@ const getSubdomainAndPathTestCases: [string, DomainDetails][] = [
     ['http://docs.localhost/assets/index-a242f32b.js',
         { subdomain: 'docs', path: '/assets/index-a242f32b.js'}],
     ['https://abc.blob.store/', { subdomain: 'abc', path: '/index.html' }],
-    ['abc.blob.store/', { subdomain: 'abc', path: '/index.html' }],
+    ['https://abc.blob.store', { subdomain: 'abc', path: '/index.html' }],
+    ['https://stake.walrus.site/images/favicon.ico', { subdomain: 'stake', path: '/images/favicon.ico' }],
 ]
 
 describe('getSubdomainAndPath', () => {
