@@ -7,7 +7,7 @@ import { config } from "./configuration_loader";
 import logger from "@lib/logger";
 import { NextRequest } from "next/server";
 import { getSubdomainAndPath } from "@lib/domain_parsing";
-import uaparser from "ua-parser-js";
+import { IResult, UAParser } from "ua-parser-js";
 
 if (config.amplitudeApiKey) {
 	logger.info({ message: "Initializing Amplitude" });
@@ -40,21 +40,23 @@ export async function sendToAmplitude(request: NextRequest, originalUrl: URL): P
 	try {
 		const domainDetails = getSubdomainAndPath(originalUrl)
 		logger.info({ domainDetails: JSON.stringify(Object.assign({}, domainDetails)) });
-		let ua;
-		try {
-            let user_agent = request.headers.get("user-agent");
-            logger.info({ user_agent: user_agent });
-			ua = new uaparser.UAParser(user_agent ?? undefined);
-		} catch (e) {
-			console.warn("Could not parse user agent: ", e);
-		}
+		let ua: IResult | undefined;
+        let user_agent = request.headers.get("user-agent");
+        logger.info({ user_agent: user_agent });
+        if (!!user_agent) {
+            try {
+                ua = UAParser(user_agent);
+            } catch (e) {
+                console.warn("Could not parse user agent: ", e);
+            }
+        }
 		logger.info({ ua: JSON.stringify(Object.assign({}, ua)) });
         let amplitudeEvent = {
-            os_name: ua?.getOS().name,
-            os_version: ua?.getOS().version,
+            os_name: ua?.os.name,
+            os_version: ua?.os.version,
             device_id: generateDeviceId(request.headers.get("user-agent")),
-            device_manufacturer: ua?.getDevice().vendor,
-            platform: ua?.getDevice().type,
+            device_manufacturer: ua?.device.vendor,
+            platform: ua?.device.type,
 	    	event_type: "page_view",
 			region: request.geo?.region,
 			country: request.geo?.country,
