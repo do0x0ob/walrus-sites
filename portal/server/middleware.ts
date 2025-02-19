@@ -5,17 +5,21 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
+    console.log("middleware request", JSON.stringify(Object.assign({}, request), null, 2));
     const urlOriginal = extractUrlFrom(request)
+    console.log("urlOriginal", urlOriginal);
     const alreadyAtRoot = request.nextUrl.pathname === '/'
     // Bypass middleware for walrus-sites-sw.js
     if (request.nextUrl.pathname.endsWith('walrus-sites-sw.js')) {
         return NextResponse.next()
     }
+    console.log("alreadyAtRoot", alreadyAtRoot);
     if (alreadyAtRoot) {
         const response = NextResponse.next()
         response.headers.set('x-original-url', urlOriginal)
         return response
     }
+    console.log("redirecting to root");
     const urlRedirect = new URL('/', request.url)
     const response = NextResponse.rewrite(urlRedirect)
     response.headers.set('x-original-url', urlOriginal)
