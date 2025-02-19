@@ -27,7 +27,8 @@ if (config.amplitudeApiKey) {
 */
 export async function sendToAmplitude(request: NextRequest): Promise<void> {
 	if (!isHtmlPage(request)) {
-		logger.warn({ message: "Not an HTML page. Skipping tracking.", request: JSON.stringify(request) });
+        logger.warn({ message: "Not an HTML page. Skipping tracking." });
+		logger.warn({ sendToAmplitudeRequest: JSON.stringify(Object.assign({}, request), null, 2) });
 		return;
 	}
 	if (!config.amplitudeApiKey) {
