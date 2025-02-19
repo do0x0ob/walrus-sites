@@ -18,6 +18,7 @@ if (config.amplitudeApiKey) {
 		// Events queue will flush every certain milliseconds based on setting.
 		// Default value is 10000 milliseconds.
 		flushIntervalMillis: 20000, // Increase this to at least 10000 for production use.
+        logLevel: 4,
 	});
 }
 
