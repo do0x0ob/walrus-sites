@@ -27,22 +27,24 @@ if (config.amplitudeApiKey) {
 */
 export async function sendToAmplitude(request: NextRequest): Promise<void> {
 	if (!isHtmlPage(request)) {
-        logger.warn("Not an HTML page. Skipping tracking.");
-		logger.warn({ sendToAmplitudeRequest: JSON.stringify(Object.assign({}, request), null, 2) });
 		return;
 	}
 	if (!config.amplitudeApiKey) {
 		logger.warn("Amplitude API key not found. Skipping tracking.");
 		return;
 	}
+	logger.info({ toBeSent: JSON.stringify(Object.assign({}, request)) });
+	logger.info({ toBeSentHeaders: JSON.stringify(Object.assign({}, request.headers)) });
 	try {
 		const domainDetails = getSubdomainAndPath(request.nextUrl)
+		logger.info({ domainDetails: JSON.stringify(Object.assign({}, domainDetails)) });
 		let ua;
 		try {
 			ua = new uaparser.UAParser(request.headers.get("user-agent") ?? undefined);
 		} catch (e) {
 			console.warn("Could not parse user agent: ", e);
 		}
+		logger.info({ ua: JSON.stringify(Object.assign({}, ua)) });
 		amplitude.track({
 			os_name: ua?.getOS().name,
 			os_version: ua?.getOS().version,
