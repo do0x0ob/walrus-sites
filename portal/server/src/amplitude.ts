@@ -25,7 +25,7 @@ if (config.amplitudeApiKey) {
 * Sends a page view event to Amplitude.
 * @param request - The incoming request to the portal.
 */
-export async function sendToAmplitude(request: NextRequest): Promise<void> {
+export async function sendToAmplitude(request: NextRequest, originalUrl: URL): Promise<void> {
 	if (!isHtmlPage(request)) {
 		return;
 	}
@@ -34,24 +34,27 @@ export async function sendToAmplitude(request: NextRequest): Promise<void> {
 		return;
 	}
     request.headers.forEach((value, key) => {
-        logger.info({ header: key, value: value });
+        logger.info({header: key });
+        logger.info({headerValue: value });
     });
 	try {
-		const domainDetails = getSubdomainAndPath(request.nextUrl)
+		const domainDetails = getSubdomainAndPath(originalUrl)
 		logger.info({ domainDetails: JSON.stringify(Object.assign({}, domainDetails)) });
 		let ua;
 		try {
-			ua = new uaparser.UAParser(request.headers.get("user-agent") ?? undefined);
+            let user_agent = request.headers.get("user-agent");
+            logger.info({ user_agent: user_agent });
+			ua = new uaparser.UAParser(user_agent ?? undefined);
 		} catch (e) {
 			console.warn("Could not parse user agent: ", e);
 		}
 		logger.info({ ua: JSON.stringify(Object.assign({}, ua)) });
-		amplitude.track({
-			os_name: ua?.getOS().name,
-			os_version: ua?.getOS().version,
-			device_id: generateDeviceId(request.headers.get("user-agent")),
-			device_manufacturer: ua?.getDevice().vendor,
-			platform: ua?.getDevice().type,
+        let amplitudeEvent = {
+            os_name: ua?.getOS().name,
+            os_version: ua?.getOS().version,
+            device_id: generateDeviceId(request.headers.get("user-agent")),
+            device_manufacturer: ua?.getDevice().vendor,
+            platform: ua?.getDevice().type,
 	    	event_type: "page_view",
 			region: request.geo?.region,
 			country: request.geo?.country,
@@ -66,7 +69,9 @@ export async function sendToAmplitude(request: NextRequest): Promise<void> {
 				},
 			},
 			user_agent: request.headers.get("user-agent") ?? undefined,
-  	    })
+		}
+		logger.info({ amplitudeEvent: JSON.stringify(Object.assign({}, amplitudeEvent)) });
+		amplitude.track(amplitudeEvent);
 	} catch (e) {
 		console.warn("Amplitude could not track event: ", e);
 	}
