@@ -10,6 +10,7 @@ import { getSubdomainAndPath } from "@lib/domain_parsing";
 import uaparser from "ua-parser-js";
 
 if (config.amplitudeApiKey) {
+	logger.info({ message: "Initializing Amplitude" });
 	amplitude.init(process.env.AMPLITUDE_API_KEY!,{
 		// Events queued in memory will flush when number of events exceed upload threshold.
 		// Default value is 30.

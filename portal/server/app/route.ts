@@ -31,9 +31,11 @@ export async function GET(req: NextRequest) {
 
     // Send the page view event to either Amplitude or Vercel Web Analytics.
     if (config.amplitudeApiKey) {
-        logger.info({ message: "Sending page view event to Amplitude", request: JSON.stringify(req) });
+        logger.info({ message: "Sending page view event to Amplitude", rrreeeqqq: JSON.stringify(req) });
 		await sendToAmplitude(req);
-	}
+	} else {
+        logger.info({ message: "No Amplitude API key found. Skipping page view event." });
+    }
     if (config.enableVercelWebAnalytics) {
 		await sendToWebAnalytics(req);
 	}

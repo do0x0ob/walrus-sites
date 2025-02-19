@@ -10,6 +10,7 @@ import * as Sentry from "@sentry/nextjs";
 import { config } from "src/configuration_loader";
 
 if (config.enableSentry) {
+    console.log("Initializing Sentry - edge");
     Sentry.init({
         dsn: config.sentryDsn,
 
