@@ -33,8 +33,9 @@ export async function sendToAmplitude(request: NextRequest): Promise<void> {
 		logger.warn("Amplitude API key not found. Skipping tracking.");
 		return;
 	}
-	logger.info({ toBeSent: JSON.stringify(Object.assign({}, request)) });
-	logger.info({ toBeSentHeaders: JSON.stringify(Object.assign({}, request.headers)) });
+    request.headers.forEach((value, key) => {
+        logger.info({ header: key, value: value });
+    });
 	try {
 		const domainDetails = getSubdomainAndPath(request.nextUrl)
 		logger.info({ domainDetails: JSON.stringify(Object.assign({}, domainDetails)) });
