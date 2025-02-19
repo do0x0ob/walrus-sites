@@ -14,8 +14,10 @@ import { standardUrlFetcher, premiumUrlFetcher } from "src/url_fetcher_factory";
 import { NextRequest } from "next/server";
 import { sendToWebAnalytics } from "src/web_analytics";
 import { sendToAmplitude } from "src/amplitude";
+import logger from "@lib/logger";
 
 if (config.enableSentry) {
+    logger.info({ message: "Integrating Sentry" });
     // Only integrate Sentry on production.
     integrateLoggerWithSentry();
 }
@@ -29,6 +31,7 @@ export async function GET(req: NextRequest) {
 
     // Send the page view event to either Amplitude or Vercel Web Analytics.
     if (config.amplitudeApiKey) {
+        logger.info({ message: "Sending page view event to Amplitude", request: JSON.stringify(req) });
 		await sendToAmplitude(req);
 	}
     if (config.enableVercelWebAnalytics) {
