@@ -17,7 +17,7 @@ if (config.enableSentry) {
         tracesSampleRate: config.sentryTracesSampleRate,
 
         // Setting this option to true will print useful information to the console while you're setting up Sentry.
-        debug: false,
+        debug: true,
         beforeSend: (event, hint) => {
             console.log("beforeSend - server", event, hint)
             return event;
