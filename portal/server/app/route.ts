@@ -15,6 +15,8 @@ import { NextRequest } from "next/server";
 import { sendToWebAnalytics } from "src/web_analytics";
 import { sendToAmplitude } from "src/amplitude";
 
+export const runtime = "nodejs";
+
 if (config.enableSentry) {
     // Only integrate Sentry on production.
     integrateLoggerWithSentry();
