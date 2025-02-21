@@ -14,6 +14,7 @@ function addLoggingArgsToSentry(args: { [key: string]: any }) {
 }
 
 function integrateLoggerWithSentry() {
+    Sentry.captureMessage("starting sentry logger")
     logger.setErrorPredicate(args => {
         console.log("capture exception", args)
         addLoggingArgsToSentry(args);
