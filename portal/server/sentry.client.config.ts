@@ -9,6 +9,7 @@ import * as Sentry from "@sentry/nextjs";
 import { config } from "src/configuration_loader";
 
 if (config.enableSentry) {
+    console.log("Initializing Sentry - client");
     Sentry.init({
         dsn: config.sentryDsn,
 
@@ -17,5 +18,9 @@ if (config.enableSentry) {
 
         // Setting this option to true will print useful information to the console while you're setting up Sentry.
         debug: true,
+        beforeSend: (event, hint) => {
+            console.log("beforeSend - client", event, hint)
+            return event;
+        }
     });
 }
