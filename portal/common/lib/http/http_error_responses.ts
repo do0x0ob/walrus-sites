@@ -8,6 +8,8 @@ import { HttpStatusCodes } from "./http_status_codes"
 const mainNotFoundErrorMessage = "Well, this is awkward." //You have reached the end of the internet, please turn back!"
 
 export function siteNotFound(): Response {
+
+    console.log("siteNotFound");
     return Response404(
         mainNotFoundErrorMessage,
         "We promise our storage protocol is rock-solid, but this page seems to have gone on a coffee break." //Invalid URL: The object ID is not a valid Walrus Site."
