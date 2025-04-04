@@ -26,4 +26,4 @@ contexts:
        # walrus_config: /path/to/mainnet/client_config.yaml
        # gas_budget: 500000000
 
-default_context: mainnet
+default_context: testnet
